@@ -1,182 +1,150 @@
-const search = document.getElementById("search");
-const random = document.getElementById("random");
-const submit = document.getElementById("submit");
-const mealsEl = document.getElementById("meals");
-const resultHeading = document.getElementById("result-heading");
-const single_mealEl = document.getElementById("single-meal");
-const spinner = document.querySelector(".spinner");
+var container = document.getElementById("container");
+var boxColor = document.querySelectorAll(".box");
 
-// SEARCHMEAL AND FETCH API
+let colors = generateRandomColor(6);
 
-function searchMeal(e) {
-  e.preventDefault();
+let numSquares = 6;
+var pickedColor = random();
+let colorPick = document.getElementById("colorPick");
+let texts = document.getElementById("texts");
+colorPick.textContent = ` ${pickedColor} `;
+var decision = document.getElementById("decision");
 
-  // clear single meal
-  single_mealEl.innerHTML = "";
+let easyLevel = document.querySelector("#easy");
+let hardLevel = document.getElementById("hard");
 
-  // get search term
-  const term = search.value;
-  console.log(term);
+var resetButton = document.getElementById("reset");
 
-  //check for empty
-  // if (term.trim()) {
-  //   fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s= ${term}`)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //       resultHeading.innerHTML = `<h2> search results for ${term}: </h2>`;
+easyLevel.addEventListener("click", function () {
+  hardLevel.classList.remove("colorthis");
+  easyLevel.classList.add("colorthis");
+  this.style.color = "white";
+  hardLevel.style.color = "blueviolet";
+  hardLevel.style.padding = "5px";
 
-  //       if (data.meals === null) {
-  //         resultHeading.innerHTML = `<h2> There are no search results. Try Again!</h2>`;
-  //       } else {
-  //         mealsEl.innerHTML = data.meals
-  //           .map(
-  //             (meal) => `
-  //         <div class="meal">
-  //           <img src = "${meal.strMealThumb}" alt = "${meal.strMeal}" />
-  //           <div class="meal-info" data-mealID="${meal.idMeal}">
-  //           <h3>${meal.strMeal}</h3>
-  //           </div>
-  //           </div>
-  //         `
-  //           )
-  //           .join("");
-  //       }
-  //     });
+  numSquares = 3;
 
-  if (term.trim()) {
-    async function await() {
-      try {
-        const a = fetch(
-          `https://www.themealdb.com/api/json/v1/1/search.php?s= ${term}`
-        );
-        let b = await a;
-        let data = await b.json();
-        resultHeading.innerHTML = `<h2> search results for ${term}: </h2>`;
+  colors = generateRandomColor(numSquares);
 
-        if (data.meals === null) {
-          resultHeading.innerHTML = `<h2> There are no search results. Try Again!</h2>`;
-        } else {
-          mealsEl.innerHTML = data.meals
-            .map(
-              (meal) => `
-          <div class="meal">
-            <img src = "${meal.strMealThumb}" alt = "${meal.strMeal}" />
-            <div class="meal-info" data-mealID="${meal.idMeal}">
-            <h3>${meal.strMeal}</h3>
-            </div>
-            </div>
-          `
-            )
+  pickedColor = random();
 
-            .join("");
-          spinner.style.display = "none";
-        }
-      } catch (err) {
-        console.log("error");
-      }
-    }
-    spinner.style.display = "block";
+  decision.textContent = "";
 
-    await();
-    search.value = "";
-  }
+  texts.style.backgroundColor = "blueviolet";
 
-  //   clear search text
-  else {
-    alert("please enter a search term");
-  }
-}
+  colorPick.textContent = ` ${pickedColor} `;
 
-//fetch meal by ID
-function getMealById(mealID) {
-  fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealID}`)
-    .then((res) => res.json())
-    .then((data) => {
-      const meal = data.meals[0];
-
-      addMealToDOM(meal);
-    });
-}
-
-//fetch random meal from API
-
-function randomMeal() {
-  mealsEl.innerHTML = "";
-  resultHeading.innerHTML = "";
-
-  fetch("https://www.themealdb.com/api/json/v1/1/random.php")
-    .then((res) => res.json())
-    .then((data) => {
-      const meal = data.meals[0];
-
-      addMealToDOM(meal);
-    });
-}
-
-// ADDEVENTLISTNER
-
-//add meal to DOM
-function addMealToDOM(meal) {
-  const ingredients = [];
-
-  for (let i = 1; i <= 20; i++) {
-    if (meal[`strIngredient${i}`]) {
-      ingredients.push(
-        `${meal[`strIngredient${i}`]} - ${meal[`strMeasure${i}`]}`
-      );
+  for (var i = 0; i < boxColor.length; i++) {
+    if (colors[i]) {
+      boxColor[i].style.backgroundColor = colors[i];
     } else {
-      break;
+      boxColor[i].style.display = "none";
     }
   }
-
-  single_mealEl.innerHTML = `
-  <div class = "single-meal">
-  <h1> ${meal.strMeal} </h1>
-  <img src="${meal.strMealThumb}" alt="${meal.strMeal}"/>
-  <div class= "single-meal-info">
-  ${meal.strCategory ? `<p>${meal.strCategory}</p>` : ""}
-  ${meal.strArea ? `<p>${meal.strArea}</p>` : ""}
-
-  </div>
-
-  <div class = "main">
-  <p> ${meal.strInstructions} </p>
-  <h2> Ingredients </h2>
-
-  <ul>
-  ${ingredients.map((f) => `<li> ${f} </li>`).join("")}
-  </ul>
-
-  </div>
-  </div>
-  `;
-}
-
-submit.addEventListener("submit", searchMeal);
-random.addEventListener("click", randomMeal);
-
-//Event listener
-
-mealsEl.addEventListener("click", (e) => {
-  const s = e.path.find((item) => {
-    if (item.classList) {
-      return item.classList.contains("meal-info");
-    }
-  });
 });
 
-mealsEl.addEventListener("click", (e) => {
-  const mealInfo = e.path.find((item) => {
-    if (item.classList) {
-      return item.classList.contains("meal-info");
-    } else {
-    }
-  });
-  console.log(mealInfo);
+hardLevel.addEventListener("click", function () {
+  hardLevel.classList.add("colorthis");
+  easyLevel.classList.remove("colorthis");
+  this.style.color = "white";
+  easyLevel.style.color = "blueviolet";
+  easyLevel.style.padding = "5px";
 
-  if (mealInfo) {
-    const mealID = mealInfo.getAttribute("data-mealid");
-    getMealById(mealID);
+  numSquares = 6;
+
+  colors = generateRandomColor(numSquares);
+
+  texts.style.backgroundColor = "blueviolet";
+
+  pickedColor = random();
+
+  decision.textContent = "";
+
+  colorPick.textContent = ` ${pickedColor} `;
+
+  for (var i = 0; i < boxColor.length; i++) {
+    if (colors[i]) {
+      boxColor[i].style.backgroundColor = colors[i];
+      boxColor[i].style.display = "block";
+    }
   }
 });
+
+resetButton.addEventListener("click", function () {
+  colors = generateRandomColor(numSquares);
+
+  pickedColor = random();
+
+  // resetButton.style.hover.backgroundColor = "blueviolet";
+  // resetButton.style.color = "white";
+  // resetButton.style.padding = "5px";
+
+  colorPick.textContent = ` ${pickedColor} `;
+
+  texts.style.backgroundColor = "blueviolet";
+
+  resetButton.textContent = "New Color";
+
+  decision.textContent = "";
+  for (i = 0; i < boxColor.length; i++) {
+    boxColor[i].style.backgroundColor = colors[i];
+  }
+});
+
+colorPick.textContent = ` ${pickedColor} `;
+
+for (var i = 0; i < boxColor.length; i++) {
+  boxColor[i].style.backgroundColor = colors[i];
+
+  boxColor[i].addEventListener("click", function () {
+    console.log("clicked");
+
+    this.style.transition = "0.7s";
+    var chosenColor = this.style.backgroundColor;
+    if (chosenColor === pickedColor) {
+      colorPick.textContent = ` ${pickedColor} `;
+      decision.textContent = "CORRECT!!!";
+
+      texts.style.backgroundColor = pickedColor;
+      texts.style.padding = "40px 0";
+      switchColor(pickedColor);
+
+      resetButton.textContent = "Play Again?";
+    } else {
+      decision.textContent = "WRONG!!!";
+      this.style.backgroundColor = "rgb(32, 26, 26)";
+    }
+  });
+}
+
+function switchColor(color) {
+  for (i = 0; i < boxColor.length; i++) {
+    boxColor[i].style.backgroundColor = color;
+    console.log(color);
+  }
+}
+
+function random() {
+  var random = Math.floor(Math.random() * colors.length);
+  return colors[random];
+}
+
+function generateRandomColor(num) {
+  var arr = [];
+
+  for (i = 0; i < num; i++) {
+    arr[i] = randomColor();
+  }
+
+  return arr;
+}
+
+function randomColor() {
+  var r = Math.floor(Math.random() * 256);
+  var g = Math.floor(Math.random() * 256);
+  var b = Math.floor(Math.random() * 256);
+
+  return "rgb(" + r + ", " + g + ", " + b + ")";
+}
+
+const box = document.querySelectorAll(".box");

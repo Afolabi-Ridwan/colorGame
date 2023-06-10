@@ -1,50 +1,40 @@
-<!DOCTYPE html>
 <html>
   <head>
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1"
     />
-    <title>Meal Finder</title>
+    <title>Color Game</title>
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+    <div style="color: white" id="texts">
+      <h1 class="t">The Great</h1>
+      <h1 id="colorPick"></h1>
+      <h1 class="t">Color Game</h1>
+    </div>
+    <div></div>
 
-    <div class="container">
-      <h1>Meal Finder</h1>
-      <div class="flex">
-        <form class="flex" id="submit">
-          <input
-            type="text"
-            id="search"
-            placeholder="Search for meals or keywords"
-          />
-          <button class="search-btn" type="submit">
-            <i class="fas fa-search"></i>
-          </button>
-        </form>
+    <div id="line">
+      <button id="reset">New Color</button>
+      <h3 id="decision"></h3>
 
-        <button class="random-btn" id="random">
-          <i class="fas fa-random"></i>
-        </button>
+      <div class="level">
+        <button id="easy">Easy</button>
+        <button id="hard">Hard</button>
       </div>
-
-      <div id="result-heading"></div>
-      <div id="meals" class="meals"></div>
-      <div id="single-meal"></div>
     </div>
 
-    <div class="spinner">
-      <div id="spinner"><i class="fas fa-spinner"></i></div>
+    <div id="container">
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
     </div>
+
     <script src="script.js"></script>
   </body>
 </html>
